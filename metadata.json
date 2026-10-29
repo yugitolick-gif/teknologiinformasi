@@ -1,0 +1,6 @@
+{
+  "name": "RPS Pengantar Teknologi Informasi",
+  "description": "Portal Pembelajaran & Rencana Pembelajaran Semester (RPS) Interaktif Mata Kuliah Pengantar Teknologi Informasi (TI001), 3 SKS, Kelas A.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,147 @@
+{
+  "entities": {
+    "Student": {
+      "title": "Student",
+      "description": "Student record in course Pengantar Teknologi Informasi Kelas A",
+      "type": "object",
+      "properties": {
+        "nim": {
+          "type": "string",
+          "description": "Student Identification Number (NIM)",
+          "maxLength": 30,
+          "pattern": "^[0-9a-zA-Z\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Student Full Name",
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "description": "Student academic email",
+          "maxLength": 100
+        },
+        "attendance": {
+          "type": "array",
+          "description": "Attendance record for 16 meetings (boolean array)"
+        },
+        "tugas": {
+          "type": "number",
+          "description": "Assignment grade 0-100"
+        },
+        "keaktifan": {
+          "type": "number",
+          "description": "Participation grade 0-100"
+        },
+        "uts": {
+          "type": "number",
+          "description": "Midterm exam grade 0-100"
+        },
+        "uas": {
+          "type": "number",
+          "description": "Final exam grade 0-100"
+        },
+        "catatanDosen": {
+          "type": "string",
+          "description": "Lecturer notes regarding student progress",
+          "maxLength": 500
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last updated ISO timestamp",
+          "maxLength": 50
+        }
+      },
+      "required": ["nim", "name", "attendance", "tugas", "keaktifan", "uts", "uas"]
+    },
+    "CourseProgress": {
+      "title": "CourseProgress",
+      "description": "Lecture progress and completion status for 16 RPS meetings",
+      "type": "object",
+      "properties": {
+        "courseCode": {
+          "type": "string",
+          "description": "Course identifier (TI001)",
+          "maxLength": 20
+        },
+        "completedMeetings": {
+          "type": "array",
+          "description": "List of meeting numbers that have been concluded"
+        },
+        "currentMeeting": {
+          "type": "number",
+          "description": "Current active week of class"
+        },
+        "academicYear": {
+          "type": "string",
+          "description": "Academic semester label",
+          "maxLength": 50
+        },
+        "announcement": {
+          "type": "string",
+          "description": "Class announcement or notes from lecturer",
+          "maxLength": 500
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update ISO timestamp",
+          "maxLength": 50
+        }
+      },
+      "required": ["courseCode", "completedMeetings", "currentMeeting"]
+    },
+    "QuizSubmission": {
+      "title": "QuizSubmission",
+      "description": "Quiz attempt records for course meetings",
+      "type": "object",
+      "properties": {
+        "meetingId": {
+          "type": "number",
+          "description": "Meeting number 1-16"
+        },
+        "studentNim": {
+          "type": "string",
+          "description": "Student NIM or identifier",
+          "maxLength": 30
+        },
+        "studentName": {
+          "type": "string",
+          "description": "Student Name",
+          "maxLength": 100
+        },
+        "score": {
+          "type": "number",
+          "description": "Score achieved (0-100)"
+        },
+        "correctCount": {
+          "type": "number",
+          "description": "Number of correct answers"
+        },
+        "totalQuestions": {
+          "type": "number",
+          "description": "Total number of questions"
+        },
+        "submittedAt": {
+          "type": "string",
+          "description": "ISO timestamp of submission",
+          "maxLength": 50
+        }
+      },
+      "required": ["meetingId", "score", "correctCount", "totalQuestions"]
+    }
+  },
+  "firestore": {
+    "/students/{studentId}": {
+      "schema": "Student",
+      "description": "Collection of student academic and attendance records for Kelas A"
+    },
+    "/course_settings/{settingId}": {
+      "schema": "CourseProgress",
+      "description": "Course progress, syllabus completion, and classroom announcements"
+    },
+    "/quiz_submissions/{submissionId}": {
+      "schema": "QuizSubmission",
+      "description": "Interactive quiz practice submissions by students"
+    }
+  }
+}

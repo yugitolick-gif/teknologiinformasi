@@ -1,0 +1,97 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global Safety Net: Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper Primitives
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Validation Blueprint for Student entity
+    function isValidStudent(data) {
+      return data.keys().hasAll(['nim', 'name', 'attendance', 'tugas', 'keaktifan', 'uts', 'uas'])
+        && data.keys().hasOnly(['id', 'nim', 'name', 'email', 'attendance', 'tugas', 'keaktifan', 'uts', 'uas', 'catatanDosen', 'updatedAt'])
+        && data.nim is string && data.nim.size() > 0 && data.nim.size() <= 30
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 100
+        && (!('email' in data) || (data.email is string && data.email.size() <= 100))
+        && (!('catatanDosen' in data) || (data.catatanDosen is string && data.catatanDosen.size() <= 500))
+        && (!('updatedAt' in data) || (data.updatedAt is string && data.updatedAt.size() <= 50))
+        && data.attendance is list && data.attendance.size() <= 20
+        && data.tugas is number && data.tugas >= 0 && data.tugas <= 100
+        && data.keaktifan is number && data.keaktifan >= 0 && data.keaktifan <= 100
+        && data.uts is number && data.uts >= 0 && data.uts <= 100
+        && data.uas is number && data.uas >= 0 && data.uas <= 100;
+    }
+
+    // Validation Blueprint for CourseProgress entity
+    function isValidCourseProgress(data) {
+      return data.keys().hasAll(['courseCode', 'completedMeetings', 'currentMeeting'])
+        && data.keys().hasOnly(['courseCode', 'completedMeetings', 'currentMeeting', 'academicYear', 'announcement', 'updatedAt'])
+        && data.courseCode is string && data.courseCode.size() > 0 && data.courseCode.size() <= 20
+        && data.completedMeetings is list && data.completedMeetings.size() <= 20
+        && data.currentMeeting is number && data.currentMeeting >= 1 && data.currentMeeting <= 16
+        && (!('academicYear' in data) || (data.academicYear is string && data.academicYear.size() <= 50))
+        && (!('announcement' in data) || (data.announcement is string && data.announcement.size() <= 500))
+        && (!('updatedAt' in data) || (data.updatedAt is string && data.updatedAt.size() <= 50));
+    }
+
+    // Validation Blueprint for QuizSubmission entity
+    function isValidQuizSubmission(data) {
+      return data.keys().hasAll(['meetingId', 'score', 'correctCount', 'totalQuestions'])
+        && data.keys().hasOnly(['meetingId', 'score', 'correctCount', 'totalQuestions', 'studentNim', 'studentName', 'submittedAt'])
+        && data.meetingId is number && data.meetingId >= 1 && data.meetingId <= 16
+        && data.score is number && data.score >= 0 && data.score <= 100
+        && data.correctCount is number && data.correctCount >= 0 && data.correctCount <= 20
+        && data.totalQuestions is number && data.totalQuestions >= 1 && data.totalQuestions <= 20
+        && (!('studentNim' in data) || (data.studentNim is string && data.studentNim.size() <= 30))
+        && (!('studentName' in data) || (data.studentName is string && data.studentName.size() <= 100))
+        && (!('submittedAt' in data) || (data.submittedAt is string && data.submittedAt.size() <= 50));
+    }
+
+    // Collection: Students (Kelas A)
+    match /students/{studentId} {
+      allow get, list: if true;
+      allow create: if isValidId(studentId) && isValidStudent(incoming());
+      allow update: if isValidId(studentId) && isValidStudent(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    // Collection: Course Progress & Syllabus Settings
+    match /course_settings/{settingId} {
+      allow get, list: if true;
+      allow create: if isValidId(settingId) && isValidCourseProgress(incoming());
+      allow update: if isValidId(settingId) && isValidCourseProgress(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    // Collection: Quiz Submissions
+    match /quiz_submissions/{submissionId} {
+      allow get, list: if true;
+      allow create: if isValidId(submissionId) && isValidQuizSubmission(incoming());
+      allow update: if isValidId(submissionId) && isValidQuizSubmission(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    // Test connection probe document
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}
