@@ -43,9 +43,10 @@ export const CourseHero: React.FC<CourseHeroProps> = ({
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight text-balance">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight text-balance">
               {COURSE_IDENTITY.courseName}
             </h1>
+
 
             <p className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-3xl">
               {COURSE_IDENTITY.description}

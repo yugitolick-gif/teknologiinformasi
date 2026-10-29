@@ -225,10 +225,10 @@ export const InteractiveLabs: React.FC<InteractiveLabsProps> = ({ initialLabId }
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100 rounded-xl text-xs shrink-0">
+        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl text-xs overflow-x-auto scrollbar-none touch-pan-x w-full md:w-auto shrink-0">
           <button
             onClick={() => setActiveLab('binary-converter')}
-            className={`px-3 py-1.5 font-semibold rounded-lg transition-all ${
+            className={`px-3 py-2 font-semibold rounded-lg transition-all whitespace-nowrap min-h-[38px] ${
               activeLab === 'binary-converter'
                 ? 'bg-white text-indigo-700 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -238,7 +238,7 @@ export const InteractiveLabs: React.FC<InteractiveLabsProps> = ({ initialLabId }
           </button>
           <button
             onClick={() => setActiveLab('network-topology')}
-            className={`px-3 py-1.5 font-semibold rounded-lg transition-all ${
+            className={`px-3 py-2 font-semibold rounded-lg transition-all whitespace-nowrap min-h-[38px] ${
               activeLab === 'network-topology'
                 ? 'bg-white text-indigo-700 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -248,7 +248,7 @@ export const InteractiveLabs: React.FC<InteractiveLabsProps> = ({ initialLabId }
           </button>
           <button
             onClick={() => setActiveLab('sql-sandbox')}
-            className={`px-3 py-1.5 font-semibold rounded-lg transition-all ${
+            className={`px-3 py-2 font-semibold rounded-lg transition-all whitespace-nowrap min-h-[38px] ${
               activeLab === 'sql-sandbox'
                 ? 'bg-white text-indigo-700 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -258,7 +258,7 @@ export const InteractiveLabs: React.FC<InteractiveLabsProps> = ({ initialLabId }
           </button>
           <button
             onClick={() => setActiveLab('security-crypto')}
-            className={`px-3 py-1.5 font-semibold rounded-lg transition-all ${
+            className={`px-3 py-2 font-semibold rounded-lg transition-all whitespace-nowrap min-h-[38px] ${
               activeLab === 'security-crypto'
                 ? 'bg-white text-indigo-700 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -268,7 +268,7 @@ export const InteractiveLabs: React.FC<InteractiveLabsProps> = ({ initialLabId }
           </button>
           <button
             onClick={() => setActiveLab('cloud-explorer')}
-            className={`px-3 py-1.5 font-semibold rounded-lg transition-all ${
+            className={`px-3 py-2 font-semibold rounded-lg transition-all whitespace-nowrap min-h-[38px] ${
               activeLab === 'cloud-explorer'
                 ? 'bg-white text-indigo-700 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -281,13 +281,13 @@ export const InteractiveLabs: React.FC<InteractiveLabsProps> = ({ initialLabId }
 
       {/* LAB 1: BINARY CONVERTER (Pertemuan 4) */}
       {activeLab === 'binary-converter' && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-8 shadow-xs space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
             <div>
               <span className="text-xs font-mono font-bold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded border border-indigo-100">
                 Pertemuan #4: Representasi Data
               </span>
-              <h3 className="text-xl font-bold text-slate-900 mt-1">
+              <h3 className="text-lg sm:text-xl font-bold text-slate-900 mt-1">
                 Kalkulator Register 8-Bit Interaktif (Byte Explorer)
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -295,7 +295,7 @@ export const InteractiveLabs: React.FC<InteractiveLabsProps> = ({ initialLabId }
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <label htmlFor="dec-direct" className="text-xs font-semibold text-slate-600">
+              <label htmlFor="dec-direct" className="text-xs font-semibold text-slate-600 whitespace-nowrap">
                 Ketik Desimal (0-255):
               </label>
               <input
@@ -305,7 +305,7 @@ export const InteractiveLabs: React.FC<InteractiveLabsProps> = ({ initialLabId }
                 max="255"
                 value={decimalValue}
                 onChange={(e) => handleDecimalInput(Number(e.target.value))}
-                className="w-20 px-3 py-1.5 font-mono text-center font-bold text-slate-900 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                className="w-20 px-3 py-1.5 font-mono text-center font-bold text-slate-900 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 min-h-[38px]"
               />
             </div>
           </div>
@@ -316,7 +316,7 @@ export const InteractiveLabs: React.FC<InteractiveLabsProps> = ({ initialLabId }
               Register 8-Bit (Byte): Klik bit untuk toggle 0 / 1
             </div>
 
-            <div className="grid grid-cols-8 gap-2 sm:gap-3">
+            <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 sm:gap-3">
               {bits.map((bit, idx) => {
                 const bitPower = 7 - idx;
                 const bitWeight = Math.pow(2, bitPower);
@@ -326,16 +326,16 @@ export const InteractiveLabs: React.FC<InteractiveLabsProps> = ({ initialLabId }
                   <button
                     key={idx}
                     onClick={() => toggleBit(idx)}
-                    className={`p-3 sm:p-4 rounded-xl text-center border transition-all flex flex-col items-center justify-between gap-2 ${
+                    className={`p-2.5 sm:p-4 rounded-xl text-center border transition-all flex flex-col items-center justify-between gap-1.5 sm:gap-2 min-h-[72px] ${
                       isActive
                         ? 'bg-indigo-600 text-white border-indigo-700 shadow-md scale-102 ring-2 ring-indigo-200'
-                        : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
+                        : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200 active:bg-slate-200'
                     }`}
                   >
                     <span className="text-[10px] font-mono opacity-80">
                       2^{bitPower} ({bitWeight})
                     </span>
-                    <span className="text-2xl sm:text-3xl font-black font-mono">
+                    <span className="text-xl sm:text-3xl font-black font-mono">
                       {bit}
                     </span>
                     <span
@@ -350,6 +350,7 @@ export const InteractiveLabs: React.FC<InteractiveLabsProps> = ({ initialLabId }
               })}
             </div>
           </div>
+
 
           {/* Value Readouts Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-100">
@@ -510,26 +511,27 @@ export const InteractiveLabs: React.FC<InteractiveLabsProps> = ({ initialLabId }
                 </button>
               )}
 
-              <div className="flex gap-4">
+              <div className="grid grid-cols-2 sm:flex sm:gap-3 gap-2 w-full sm:w-auto">
                 {[1, 2, 3, 4].map((id) => (
                   <button
                     key={id}
                     onClick={() => setBrokenNodeId(brokenNodeId === id ? null : id)}
-                    className={`px-3 py-2 rounded-lg border font-mono font-bold transition-all ${
+                    className={`px-3 py-2.5 rounded-lg border font-mono font-bold transition-all min-h-[44px] flex flex-col items-center justify-center ${
                       brokenNodeId === id
                         ? 'bg-rose-900/90 border-rose-500 text-rose-200'
                         : 'bg-slate-800/90 border-slate-600 text-slate-100 hover:border-indigo-400'
                     }`}
                   >
-                    Node {String.fromCharCode(64 + id)}
-                    <div className="text-[9px] font-normal">
+                    <span>Node {String.fromCharCode(64 + id)}</span>
+                    <span className="text-[10px] font-normal">
                       {brokenNodeId === id ? 'Offline' : 'Online'}
-                    </div>
+                    </span>
                   </button>
                 ))}
               </div>
             </div>
           </div>
+
 
           {/* Ping Controller & Diagnostic Feedback */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">

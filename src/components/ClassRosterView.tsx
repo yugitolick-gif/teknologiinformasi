@@ -25,6 +25,8 @@ import {
   ShieldAlert,
   Cloud,
   RefreshCw,
+  LayoutGrid,
+  List,
 } from 'lucide-react';
 
 export const ClassRosterView: React.FC = () => {
@@ -45,11 +47,13 @@ export const ClassRosterView: React.FC = () => {
   const [editingStudentId, setEditingStudentId] = useState<string | null>(null);
   const [filterThreshold, setFilterThreshold] = useState<'all' | 'above50' | 'below50' | 'full'>('all');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
 
   // Form state for adding new student
   const [newNim, setNewNim] = useState('');
   const [newName, setNewName] = useState('');
   const [newEmail, setNewEmail] = useState('');
+
 
   // 1. Initial seed and Firestore setup
   useEffect(() => {
@@ -281,7 +285,7 @@ export const ClassRosterView: React.FC = () => {
         </div>
 
         {/* Aggregate Stats Badges with 50% Threshold Insight */}
-        <div className="grid grid-cols-3 gap-3 shrink-0">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full md:w-auto shrink-0">
           <div className="p-3 bg-slate-50 border border-slate-200/80 rounded-xl text-center">
             <div className="text-[11px] text-slate-500 font-medium">Total Mahasiswa</div>
             <div className="text-xl font-bold text-slate-900 font-mono mt-0.5">
@@ -302,6 +306,7 @@ export const ClassRosterView: React.FC = () => {
           </div>
         </div>
       </div>
+
 
       {/* 50% Attendance Policy Banner */}
       <div className="bg-amber-50/80 border border-amber-200/90 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -340,27 +345,27 @@ export const ClassRosterView: React.FC = () => {
       </div>
 
       {/* Quick Attendance Selector for Active Meeting */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-xs space-y-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <UserCheck className="w-5 h-5 text-indigo-600" />
+            <UserCheck className="w-5 h-5 text-indigo-600 shrink-0" />
             <h3 className="text-sm font-bold text-slate-900">
               Presensi Cepat Pertemuan Mingguan:
             </h3>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => handleMarkAllPresent(selectedMeetingIndex)}
-              className="px-3 py-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors flex items-center gap-1.5"
+              className="px-3 py-2 text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors flex items-center gap-1.5 min-h-[38px]"
             >
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Tandai Semua Hadir di Pertemuan {selectedMeetingIndex + 1}</span>
+              <span>Tandai Semua Hadir di M{selectedMeetingIndex + 1}</span>
             </button>
 
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-3 py-1.5 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition-colors flex items-center gap-1.5"
+              className="px-3 py-2 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition-colors flex items-center gap-1.5 min-h-[38px]"
             >
               <UserPlus className="w-3.5 h-3.5" />
               <span>Tambah Mahasiswa</span>
@@ -369,7 +374,7 @@ export const ClassRosterView: React.FC = () => {
             <button
               onClick={handleManualSync}
               disabled={isSyncing}
-              className="px-3 py-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors flex items-center gap-1.5"
+              className="px-3 py-2 text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors flex items-center gap-1.5 min-h-[38px]"
               title="Sinkronkan data kelas ke Cloud Firestore"
             >
               <Cloud className={`w-3.5 h-3.5 text-emerald-600 ${isSyncing ? 'animate-bounce' : ''}`} />
@@ -378,18 +383,17 @@ export const ClassRosterView: React.FC = () => {
 
             <button
               onClick={handleExportCsv}
-              className="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-colors flex items-center gap-1.5"
+              className="px-3 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-colors flex items-center gap-1.5 min-h-[38px]"
               title="Unduh rekapitulasi data nilai & presensi sebagai CSV"
             >
               <Download className="w-3.5 h-3.5 text-slate-600" />
               <span>Ekspor CSV</span>
             </button>
           </div>
-
         </div>
 
         {/* Meeting Buttons 1 to 16 */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none text-xs">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none text-xs touch-pan-x">
           {Array.from({ length: 16 }).map((_, idx) => {
             const meetingNum = idx + 1;
             const isSelected = selectedMeetingIndex === idx;
@@ -399,7 +403,7 @@ export const ClassRosterView: React.FC = () => {
               <button
                 key={idx}
                 onClick={() => setSelectedMeetingIndex(idx)}
-                className={`px-3 py-2 rounded-xl font-semibold transition-all shrink-0 font-mono ${
+                className={`min-w-[48px] min-h-[48px] px-3 py-2 rounded-xl font-semibold transition-all shrink-0 font-mono flex flex-col items-center justify-center ${
                   isSelected
                     ? 'bg-indigo-600 text-white shadow-xs'
                     : isExam
@@ -407,8 +411,8 @@ export const ClassRosterView: React.FC = () => {
                     : 'bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                <div>M{meetingNum}</div>
-                <div className="text-[10px] opacity-80">
+                <div className="text-xs font-bold leading-none">M{meetingNum}</div>
+                <div className="text-[10px] opacity-80 mt-0.5">
                   {meetingNum === 8 ? 'UTS' : meetingNum === 16 ? 'UAS' : `W${meetingNum}`}
                 </div>
               </button>
@@ -417,77 +421,90 @@ export const ClassRosterView: React.FC = () => {
         </div>
       </div>
 
-      {/* Student List Table */}
+      {/* Student List Container (Cards & Table) */}
       <div className="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
-        <div className="p-4 sm:p-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3 flex-1 max-w-md">
-            <div className="relative flex-1">
+        {/* Filter and View Mode Switch Bar */}
+        <div className="p-4 sm:p-5 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1">
+            <div className="relative flex-1 max-w-md">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari nama atau NIM mahasiswa..."
-                className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 min-h-[38px]"
               />
             </div>
 
             {/* Threshold Filter Tabs */}
-            <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-lg text-xs">
+            <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-lg text-xs overflow-x-auto shrink-0">
               <button
                 onClick={() => setFilterThreshold('all')}
-                className={`px-2 py-1 rounded font-medium ${filterThreshold === 'all' ? 'bg-white shadow-2xs font-bold text-slate-900' : 'text-slate-600'}`}
+                className={`px-2.5 py-1.5 rounded font-medium min-h-[32px] whitespace-nowrap ${filterThreshold === 'all' ? 'bg-white shadow-2xs font-bold text-slate-900' : 'text-slate-600'}`}
               >
                 Semua
               </button>
               <button
                 onClick={() => setFilterThreshold('above50')}
-                className={`px-2 py-1 rounded font-medium ${filterThreshold === 'above50' ? 'bg-white shadow-2xs font-bold text-indigo-700' : 'text-slate-600'}`}
+                className={`px-2.5 py-1.5 rounded font-medium min-h-[32px] whitespace-nowrap ${filterThreshold === 'above50' ? 'bg-white shadow-2xs font-bold text-indigo-700' : 'text-slate-600'}`}
               >
                 ≥ 50%
               </button>
               <button
                 onClick={() => setFilterThreshold('below50')}
-                className={`px-2 py-1 rounded font-medium ${filterThreshold === 'below50' ? 'bg-white shadow-2xs font-bold text-rose-700' : 'text-slate-600'}`}
+                className={`px-2.5 py-1.5 rounded font-medium min-h-[32px] whitespace-nowrap ${filterThreshold === 'below50' ? 'bg-white shadow-2xs font-bold text-rose-700' : 'text-slate-600'}`}
               >
                 &lt; 50%
               </button>
             </div>
           </div>
 
-          <span className="text-xs text-slate-500 font-medium">
-            {filteredStudents.length} Mahasiswa ditampilkan
-          </span>
+          <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+            {/* View Mode Toggle */}
+            <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-lg text-xs">
+              <button
+                onClick={() => setViewMode('cards')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-semibold transition-all min-h-[32px] ${
+                  viewMode === 'cards'
+                    ? 'bg-white text-indigo-700 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+                title="Tampilan Kartu Ramah Sentuh (Sangat Cocok untuk Smartphone & Tablet)"
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span>Kartu Mahasiswa</span>
+              </button>
+              <button
+                onClick={() => setViewMode('table')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-semibold transition-all min-h-[32px] ${
+                  viewMode === 'table'
+                    ? 'bg-white text-indigo-700 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+                title="Tampilan Tabel Spreadsheet Lengkap (Cocok untuk Laptop / PC)"
+              >
+                <List className="w-3.5 h-3.5" />
+                <span>Tabel Lengkap</span>
+              </button>
+            </div>
+
+            <span className="text-xs text-slate-500 font-medium hidden sm:inline">
+              {filteredStudents.length} Mahasiswa
+            </span>
+          </div>
         </div>
 
-        {/* Responsive Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 uppercase font-semibold text-[11px] tracking-wider">
-              <tr>
-                <th className="py-3 px-4 w-12 text-center">No</th>
-                <th className="py-3 px-4">NIM</th>
-                <th className="py-3 px-4">Nama Mahasiswa</th>
-                <th className="py-3 px-4 text-center">
-                  Presensi M#{selectedMeetingIndex + 1}
-                </th>
-                <th className="py-3 px-4 text-center">Kehadiran (16 M)</th>
-                <th className="py-3 px-4 text-center">Syarat 50%</th>
-                <th className="py-3 px-4 text-center">Tugas (20%)</th>
-                <th className="py-3 px-4 text-center">Keaktifan (15%)</th>
-                <th className="py-3 px-4 text-center">UTS (30%)</th>
-                <th className="py-3 px-4 text-center">UAS (35%)</th>
-                <th className="py-3 px-4 text-center">Nilai Akhir</th>
-                <th className="py-3 px-4 text-center">Grade</th>
-                <th className="py-3 px-4 text-right">Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
+        {/* View Mode 1: Mobile-Friendly Touch Cards */}
+        {viewMode === 'cards' && (
+          <div className="p-4 sm:p-6 bg-slate-50/50">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-5">
               {filteredStudents.map((student, idx) => {
                 const attendedCount = student.attendance.filter(Boolean).length;
                 const attendanceRate = Math.round((attendedCount / 16) * 100);
                 const isEligible50 = attendanceRate >= 50;
                 const isPresentCurrent = student.attendance[selectedMeetingIndex];
+                const isEditing = editingStudentId === student.id;
 
                 const finalGrade = calculateFinalScore({
                   tugas: student.tugas,
@@ -496,176 +513,409 @@ export const ClassRosterView: React.FC = () => {
                   uas: student.uas,
                 });
                 const letterGrade = getLetterGrade(finalGrade);
-                const isEditing = editingStudentId === student.id;
 
                 return (
-                  <tr key={student.id} className="hover:bg-slate-50/80 transition-colors">
-                    {/* No */}
-                    <td className="py-3.5 px-4 text-center font-mono text-slate-500">
-                      {idx + 1}
-                    </td>
-
-                    {/* NIM */}
-                    <td className="py-3.5 px-4 font-mono font-bold text-slate-900 whitespace-nowrap">
-                      {student.nim}
-                    </td>
-
-                    {/* Student Name */}
-                    <td className="py-3.5 px-4">
-                      <div className="font-bold text-slate-900">{student.name}</div>
-                      <div className="text-[11px] text-slate-500 font-mono">
-                        {student.email}
-                      </div>
-                      {student.catatanDosen && (
-                        <div className="text-[10px] text-slate-500 italic mt-0.5">
-                          "{student.catatanDosen}"
+                  <div
+                    key={student.id}
+                    className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col justify-between space-y-4 hover:border-indigo-300 transition-colors"
+                  >
+                    {/* Top Row: Name, NIM & Edit Toggle */}
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-md bg-slate-100 text-slate-700 font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                            {idx + 1}
+                          </span>
+                          <span className="font-mono text-xs font-bold text-slate-800">
+                            {student.nim}
+                          </span>
                         </div>
-                      )}
-                    </td>
+                        <h4 className="text-sm font-bold text-slate-900 mt-1">
+                          {student.name}
+                        </h4>
+                        <div className="text-[11px] text-slate-500 font-mono">
+                          {student.email}
+                        </div>
+                      </div>
 
-                    {/* Presensi Meeting Switch */}
-                    <td className="py-3.5 px-4 text-center">
+                      {/* Edit Button */}
+                      <button
+                        onClick={() => setEditingStudentId(isEditing ? null : student.id)}
+                        className={`p-2 rounded-lg transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center ${
+                          isEditing
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        }`}
+                        title={isEditing ? 'Selesai edit nilai' : 'Edit nilai komponen'}
+                      >
+                        {isEditing ? <Check className="w-4 h-4" /> : <Edit2 className="w-4 h-4" />}
+                      </button>
+                    </div>
+
+                    {/* Quick Attendance Button for Current Meeting */}
+                    <div className="p-3 bg-slate-50 border border-slate-200/80 rounded-xl space-y-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-semibold text-slate-700">
+                          Presensi M#{selectedMeetingIndex + 1}:
+                        </span>
+                        <span
+                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold ${
+                            isEligible50
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                              : 'bg-rose-50 text-rose-700 border border-rose-200'
+                          }`}
+                        >
+                          {isEligible50 ? 'Lolos Syarat ≥50%' : 'Di Bawah 50%'}
+                        </span>
+                      </div>
+
                       <button
                         onClick={() => handleToggleAttendance(student.id, selectedMeetingIndex)}
-                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-all ${
+                        className={`w-full min-h-[44px] py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 active:scale-98 ${
                           isPresentCurrent
-                            ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
-                            : 'bg-rose-100 text-rose-800 hover:bg-rose-200'
+                            ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
+                            : 'bg-rose-100 hover:bg-rose-200 text-rose-800 border border-rose-200'
                         }`}
-                        title="Klik untuk mengubah status presensi pertemuan ini"
                       >
                         {isPresentCurrent ? (
                           <>
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                            <span>Hadir</span>
+                            <CheckCircle2 className="w-4 h-4 text-white" />
+                            <span>Hadir pada Pertemuan {selectedMeetingIndex + 1}</span>
                           </>
                         ) : (
                           <>
-                            <XCircle className="w-3.5 h-3.5 text-rose-600" />
-                            <span>Absen</span>
+                            <XCircle className="w-4 h-4 text-rose-600" />
+                            <span>Absen / Belum Hadir (M{selectedMeetingIndex + 1})</span>
                           </>
                         )}
                       </button>
-                    </td>
 
-                    {/* Total Attendance */}
-                    <td className="py-3.5 px-4 text-center font-mono">
-                      <span className="font-bold text-slate-900">{attendedCount}/16</span>
-                      <div className="text-[10px] text-slate-500">({attendanceRate}%)</div>
-                    </td>
+                      <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+                        <span>Total Kehadiran:</span>
+                        <span className="font-mono font-bold text-slate-800">
+                          {attendedCount}/16 Pertemuan ({attendanceRate}%)
+                        </span>
+                      </div>
+                    </div>
 
-                    {/* Syarat 50% Presensi Status */}
-                    <td className="py-3.5 px-4 text-center">
+                    {/* Grade Components Grid */}
+                    <div className="space-y-2 pt-1 border-t border-slate-100">
+                      <div className="text-[11px] font-semibold text-slate-600 flex items-center justify-between">
+                        <span>Komponen Nilai:</span>
+                        {isEditing && (
+                          <span className="text-emerald-700 font-bold">Mode Edit Aktif</span>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-4 gap-2 text-center text-xs">
+                        <div className="p-2 bg-slate-50 rounded-lg border border-slate-200/70">
+                          <div className="text-[10px] text-slate-500 font-medium">Tugas (20%)</div>
+                          {isEditing ? (
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={student.tugas}
+                              onChange={(e) => handleUpdateGrade(student.id, 'tugas', Number(e.target.value))}
+                              className="w-full text-center border border-indigo-400 bg-white rounded px-1 py-1 font-mono font-bold text-xs mt-1"
+                            />
+                          ) : (
+                            <div className="font-mono font-bold text-slate-900 mt-0.5">
+                              {student.tugas}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="p-2 bg-slate-50 rounded-lg border border-slate-200/70">
+                          <div className="text-[10px] text-slate-500 font-medium">Aktif (15%)</div>
+                          {isEditing ? (
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={student.keaktifan}
+                              onChange={(e) => handleUpdateGrade(student.id, 'keaktifan', Number(e.target.value))}
+                              className="w-full text-center border border-indigo-400 bg-white rounded px-1 py-1 font-mono font-bold text-xs mt-1"
+                            />
+                          ) : (
+                            <div className="font-mono font-bold text-slate-900 mt-0.5">
+                              {student.keaktifan}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="p-2 bg-slate-50 rounded-lg border border-slate-200/70">
+                          <div className="text-[10px] text-slate-500 font-medium">UTS (30%)</div>
+                          {isEditing ? (
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={student.uts}
+                              onChange={(e) => handleUpdateGrade(student.id, 'uts', Number(e.target.value))}
+                              className="w-full text-center border border-indigo-400 bg-white rounded px-1 py-1 font-mono font-bold text-xs mt-1"
+                            />
+                          ) : (
+                            <div className="font-mono font-bold text-indigo-700 mt-0.5">
+                              {student.uts}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="p-2 bg-slate-50 rounded-lg border border-slate-200/70">
+                          <div className="text-[10px] text-slate-500 font-medium">UAS (35%)</div>
+                          {isEditing ? (
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={student.uas}
+                              onChange={(e) => handleUpdateGrade(student.id, 'uas', Number(e.target.value))}
+                              className="w-full text-center border border-indigo-400 bg-white rounded px-1 py-1 font-mono font-bold text-xs mt-1"
+                            />
+                          ) : (
+                            <div className="font-mono font-bold text-indigo-700 mt-0.5">
+                              {student.uas}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Final Grade Card Banner */}
+                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                      <div>
+                        <span className="text-[10px] text-slate-500 uppercase tracking-wider block">
+                          Nilai Akhir & Predikat:
+                        </span>
+                        <span className="font-mono font-extrabold text-base text-slate-900">
+                          {finalGrade.toFixed(1)}
+                        </span>
+                      </div>
+
                       <span
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          isEligible50
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : 'bg-rose-50 text-rose-700 border border-rose-200'
-                        }`}
+                        className={`px-3 py-1 rounded-lg text-xs font-mono font-bold border ${letterGrade.colorClass}`}
                       >
-                        {isEligible50 ? 'Memenuhi (≥50%)' : 'Kurang (<50%)'}
+                        Grade {letterGrade.letter} ({letterGrade.predicate})
                       </span>
-                    </td>
 
-                    {/* Tugas (20%) */}
-                    <td className="py-3.5 px-4 text-center font-mono">
-                      {isEditing ? (
-                        <input
-                          type="number"
-                          value={student.tugas}
-                          onChange={(e) => handleUpdateGrade(student.id, 'tugas', Number(e.target.value))}
-                          className="w-14 text-center border border-slate-300 rounded px-1 py-0.5 text-xs font-mono"
-                        />
-                      ) : (
-                        student.tugas
-                      )}
-                    </td>
-
-                    {/* Keaktifan (15%) */}
-                    <td className="py-3.5 px-4 text-center font-mono">
-                      {isEditing ? (
-                        <input
-                          type="number"
-                          value={student.keaktifan}
-                          onChange={(e) => handleUpdateGrade(student.id, 'keaktifan', Number(e.target.value))}
-                          className="w-14 text-center border border-slate-300 rounded px-1 py-0.5 text-xs font-mono"
-                        />
-                      ) : (
-                        student.keaktifan
-                      )}
-                    </td>
-
-                    {/* UTS (30%) */}
-                    <td className="py-3.5 px-4 text-center font-mono font-semibold text-slate-800">
-                      {isEditing ? (
-                        <input
-                          type="number"
-                          value={student.uts}
-                          onChange={(e) => handleUpdateGrade(student.id, 'uts', Number(e.target.value))}
-                          className="w-14 text-center border border-slate-300 rounded px-1 py-0.5 text-xs font-mono"
-                        />
-                      ) : (
-                        student.uts
-                      )}
-                    </td>
-
-                    {/* UAS (35%) */}
-                    <td className="py-3.5 px-4 text-center font-mono font-semibold text-slate-800">
-                      {isEditing ? (
-                        <input
-                          type="number"
-                          value={student.uas}
-                          onChange={(e) => handleUpdateGrade(student.id, 'uas', Number(e.target.value))}
-                          className="w-14 text-center border border-slate-300 rounded px-1 py-0.5 text-xs font-mono"
-                        />
-                      ) : (
-                        student.uas
-                      )}
-                    </td>
-
-                    {/* Final Grade */}
-                    <td className="py-3.5 px-4 text-center font-mono font-bold text-slate-900 text-sm">
-                      {finalGrade.toFixed(1)}
-                    </td>
-
-                    {/* Grade Letter */}
-                    <td className="py-3.5 px-4 text-center">
-                      <span
-                        className={`inline-block px-2.5 py-0.5 rounded text-xs font-mono font-bold border ${letterGrade.colorClass}`}
-                      >
-                        {letterGrade.letter}
-                      </span>
-                    </td>
-
-                    {/* Action edit */}
-                    <td className="py-3.5 px-4 text-right">
-                      {isEditing ? (
-                        <button
-                          onClick={() => setEditingStudentId(null)}
-                          className="p-1.5 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-md transition-colors"
-                          title="Simpan perubahan nilai"
-                        >
-                          <Check className="w-4 h-4" />
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => setEditingStudentId(student.id)}
-                          className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-md transition-colors"
-                          title="Edit nilai mahasiswa"
-                        >
-                          <Edit2 className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-                    </td>
-                  </tr>
+                    </div>
+                  </div>
                 );
               })}
-            </tbody>
-          </table>
-        </div>
+            </div>
+          </div>
+        )}
+
+        {/* View Mode 2: Responsive Spreadsheet Table */}
+        {viewMode === 'table' && (
+          <div className="overflow-x-auto touch-pan-x">
+            <table className="w-full text-left text-xs min-w-[900px]">
+              <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 uppercase font-semibold text-[11px] tracking-wider">
+                <tr>
+                  <th className="py-3 px-4 w-12 text-center">No</th>
+                  <th className="py-3 px-4">NIM</th>
+                  <th className="py-3 px-4">Nama Mahasiswa</th>
+                  <th className="py-3 px-4 text-center">
+                    Presensi M#{selectedMeetingIndex + 1}
+                  </th>
+                  <th className="py-3 px-4 text-center">Kehadiran (16 M)</th>
+                  <th className="py-3 px-4 text-center">Syarat 50%</th>
+                  <th className="py-3 px-4 text-center">Tugas (20%)</th>
+                  <th className="py-3 px-4 text-center">Keaktifan (15%)</th>
+                  <th className="py-3 px-4 text-center">UTS (30%)</th>
+                  <th className="py-3 px-4 text-center">UAS (35%)</th>
+                  <th className="py-3 px-4 text-center">Nilai Akhir</th>
+                  <th className="py-3 px-4 text-center">Grade</th>
+                  <th className="py-3 px-4 text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredStudents.map((student, idx) => {
+                  const attendedCount = student.attendance.filter(Boolean).length;
+                  const attendanceRate = Math.round((attendedCount / 16) * 100);
+                  const isEligible50 = attendanceRate >= 50;
+                  const isPresentCurrent = student.attendance[selectedMeetingIndex];
+
+                  const finalGrade = calculateFinalScore({
+                    tugas: student.tugas,
+                    keaktifan: student.keaktifan,
+                    uts: student.uts,
+                    uas: student.uas,
+                  });
+                  const letterGrade = getLetterGrade(finalGrade);
+                  const isEditing = editingStudentId === student.id;
+
+                  return (
+                    <tr key={student.id} className="hover:bg-slate-50/80 transition-colors">
+                      {/* No */}
+                      <td className="py-3.5 px-4 text-center font-mono text-slate-500">
+                        {idx + 1}
+                      </td>
+
+                      {/* NIM */}
+                      <td className="py-3.5 px-4 font-mono font-bold text-slate-900 whitespace-nowrap">
+                        {student.nim}
+                      </td>
+
+                      {/* Student Name */}
+                      <td className="py-3.5 px-4">
+                        <div className="font-bold text-slate-900">{student.name}</div>
+                        <div className="text-[11px] text-slate-500 font-mono">
+                          {student.email}
+                        </div>
+                        {student.catatanDosen && (
+                          <div className="text-[10px] text-slate-500 italic mt-0.5">
+                            "{student.catatanDosen}"
+                          </div>
+                        )}
+                      </td>
+
+                      {/* Presensi Meeting Switch */}
+                      <td className="py-3.5 px-4 text-center">
+                        <button
+                          onClick={() => handleToggleAttendance(student.id, selectedMeetingIndex)}
+                          className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all min-h-[32px] ${
+                            isPresentCurrent
+                              ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
+                              : 'bg-rose-100 text-rose-800 hover:bg-rose-200'
+                          }`}
+                          title="Klik untuk mengubah status presensi pertemuan ini"
+                        >
+                          {isPresentCurrent ? (
+                            <>
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                              <span>Hadir</span>
+                            </>
+                          ) : (
+                            <>
+                              <XCircle className="w-3.5 h-3.5 text-rose-600" />
+                              <span>Absen</span>
+                            </>
+                          )}
+                        </button>
+                      </td>
+
+                      {/* Total Attendance */}
+                      <td className="py-3.5 px-4 text-center font-mono">
+                        <span className="font-bold text-slate-900">{attendedCount}/16</span>
+                        <div className="text-[10px] text-slate-500">({attendanceRate}%)</div>
+                      </td>
+
+                      {/* Syarat 50% Presensi Status */}
+                      <td className="py-3.5 px-4 text-center">
+                        <span
+                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            isEligible50
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                              : 'bg-rose-50 text-rose-700 border border-rose-200'
+                          }`}
+                        >
+                          {isEligible50 ? 'Memenuhi (≥50%)' : 'Kurang (<50%)'}
+                        </span>
+                      </td>
+
+                      {/* Tugas (20%) */}
+                      <td className="py-3.5 px-4 text-center font-mono">
+                        {isEditing ? (
+                          <input
+                            type="number"
+                            value={student.tugas}
+                            onChange={(e) => handleUpdateGrade(student.id, 'tugas', Number(e.target.value))}
+                            className="w-14 text-center border border-slate-300 rounded px-1 py-0.5 text-xs font-mono"
+                          />
+                        ) : (
+                          student.tugas
+                        )}
+                      </td>
+
+                      {/* Keaktifan (15%) */}
+                      <td className="py-3.5 px-4 text-center font-mono">
+                        {isEditing ? (
+                          <input
+                            type="number"
+                            value={student.keaktifan}
+                            onChange={(e) => handleUpdateGrade(student.id, 'keaktifan', Number(e.target.value))}
+                            className="w-14 text-center border border-slate-300 rounded px-1 py-0.5 text-xs font-mono"
+                          />
+                        ) : (
+                          student.keaktifan
+                        )}
+                      </td>
+
+                      {/* UTS (30%) */}
+                      <td className="py-3.5 px-4 text-center font-mono font-semibold text-slate-800">
+                        {isEditing ? (
+                          <input
+                            type="number"
+                            value={student.uts}
+                            onChange={(e) => handleUpdateGrade(student.id, 'uts', Number(e.target.value))}
+                            className="w-14 text-center border border-slate-300 rounded px-1 py-0.5 text-xs font-mono"
+                          />
+                        ) : (
+                          student.uts
+                        )}
+                      </td>
+
+                      {/* UAS (35%) */}
+                      <td className="py-3.5 px-4 text-center font-mono font-semibold text-slate-800">
+                        {isEditing ? (
+                          <input
+                            type="number"
+                            value={student.uas}
+                            onChange={(e) => handleUpdateGrade(student.id, 'uas', Number(e.target.value))}
+                            className="w-14 text-center border border-slate-300 rounded px-1 py-0.5 text-xs font-mono"
+                          />
+                        ) : (
+                          student.uas
+                        )}
+                      </td>
+
+                      {/* Final Grade */}
+                      <td className="py-3.5 px-4 text-center font-mono font-bold text-slate-900 text-sm">
+                        {finalGrade.toFixed(1)}
+                      </td>
+
+                      {/* Grade Letter */}
+                      <td className="py-3.5 px-4 text-center">
+                        <span
+                          className={`inline-block px-2.5 py-0.5 rounded text-xs font-mono font-bold border ${letterGrade.colorClass}`}
+                        >
+                          {letterGrade.letter}
+                        </span>
+                      </td>
+
+                      {/* Action edit */}
+                      <td className="py-3.5 px-4 text-right">
+                        {isEditing ? (
+                          <button
+                            onClick={() => setEditingStudentId(null)}
+                            className="p-1.5 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-md transition-colors min-h-[32px] min-w-[32px]"
+                            title="Simpan perubahan nilai"
+                          >
+                            <Check className="w-4 h-4" />
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => setEditingStudentId(student.id)}
+                            className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-md transition-colors min-h-[32px] min-w-[32px]"
+                            title="Edit nilai mahasiswa"
+                          >
+                            <Edit2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* Add Student Modal */}
+
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-6 space-y-4">

@@ -61,43 +61,44 @@ export const MeetingDetailModal: React.FC<MeetingDetailModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5"
+
+      className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-2 sm:p-5"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-headline"
     >
-      <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[94vh]">
+      <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92dvh] sm:max-h-[90vh]">
         {/* Modal Header */}
-        <div className="p-5 sm:p-6 border-b border-slate-200 bg-slate-50/90">
-          <div className="flex items-start justify-between gap-4">
-            <div className="space-y-1.5 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="px-2.5 py-0.5 bg-indigo-600 text-white font-mono text-xs font-bold rounded-md">
-                  Pertemuan #{meeting.minggu}
+        <div className="p-4 sm:p-6 border-b border-slate-200 bg-slate-50/90">
+          <div className="flex items-start justify-between gap-3">
+            <div className="space-y-1.5 flex-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <span className="px-2 py-0.5 bg-indigo-600 text-white font-mono text-[11px] sm:text-xs font-bold rounded-md">
+                  M#{meeting.minggu}
                 </span>
-                <span className="text-xs font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
+                <span className="text-[11px] sm:text-xs font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
                   {meeting.kategori}
                 </span>
-                <span className="text-xs text-slate-500 font-mono">
-                  Bobot Sesi: {meeting.bobotIndikatif}%
+                <span className="text-[11px] sm:text-xs text-slate-500 font-mono">
+                  Bobot: {meeting.bobotIndikatif}%
                 </span>
                 {meeting.isExam && (
-                  <span className="text-xs font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">
-                    Sesi Ujian Resmi
+                  <span className="text-[11px] sm:text-xs font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">
+                    Ujian Resmi
                   </span>
                 )}
               </div>
-              <h2 id="modal-headline" className="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
+              <h2 id="modal-headline" className="text-lg sm:text-2xl font-bold text-slate-900 leading-tight">
                 {meeting.bahanKajian}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-600">
-                <strong className="text-slate-800">Kemampuan Akhir (Sub-CPMK):</strong> {meeting.kemampuanAkhir}
+              <p className="text-xs sm:text-sm text-slate-600 line-clamp-2 sm:line-clamp-none">
+                <strong className="text-slate-800">Sub-CPMK:</strong> {meeting.kemampuanAkhir}
               </p>
             </div>
 
             <button
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-xl transition-colors shrink-0"
+              className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-xl transition-colors shrink-0 min-h-[40px] min-w-[40px] flex items-center justify-center"
               aria-label="Tutup jendela modal"
             >
               <X className="w-5 h-5" />
@@ -105,22 +106,22 @@ export const MeetingDetailModal: React.FC<MeetingDetailModalProps> = ({
           </div>
 
           {/* Modal Tab Navigation (4 Tabs) */}
-          <div className="flex items-center gap-1 sm:gap-2 mt-5 border-b border-slate-200 -mb-5 sm:-mb-6 pt-1 text-xs overflow-x-auto scrollbar-none">
+          <div className="flex items-center gap-1 sm:gap-2 mt-4 sm:mt-5 border-b border-slate-200 -mb-4 sm:-mb-6 pt-1 text-xs overflow-x-auto scrollbar-none touch-pan-x">
             <button
               onClick={() => setActiveTab('materi-lengkap')}
-              className={`pb-3 px-3 font-semibold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+              className={`pb-2.5 sm:pb-3 px-2.5 sm:px-3 font-semibold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap shrink-0 min-h-[38px] ${
                 activeTab === 'materi-lengkap'
                   ? 'border-indigo-600 text-indigo-700'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
             >
               <BookOpen className="w-4 h-4" />
-              <span>Modul Materi Lengkap</span>
+              <span>Modul Materi</span>
             </button>
 
             <button
               onClick={() => setActiveTab('rangkuman')}
-              className={`pb-3 px-3 font-semibold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+              className={`pb-2.5 sm:pb-3 px-2.5 sm:px-3 font-semibold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap shrink-0 min-h-[38px] ${
                 activeTab === 'rangkuman'
                   ? 'border-indigo-600 text-indigo-700'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -132,7 +133,7 @@ export const MeetingDetailModal: React.FC<MeetingDetailModalProps> = ({
 
             <button
               onClick={() => setActiveTab('silabus')}
-              className={`pb-3 px-3 font-semibold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+              className={`pb-2.5 sm:pb-3 px-2.5 sm:px-3 font-semibold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap shrink-0 min-h-[38px] ${
                 activeTab === 'silabus'
                   ? 'border-indigo-600 text-indigo-700'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -144,20 +145,21 @@ export const MeetingDetailModal: React.FC<MeetingDetailModalProps> = ({
 
             <button
               onClick={() => setActiveTab('kuis')}
-              className={`pb-3 px-3 font-semibold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+              className={`pb-2.5 sm:pb-3 px-2.5 sm:px-3 font-semibold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap shrink-0 min-h-[38px] ${
                 activeTab === 'kuis'
                   ? 'border-indigo-600 text-indigo-700'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
             >
               <HelpCircle className="w-4 h-4" />
-              <span>Kuis Mandiri ({meeting.quiz.length} Soal)</span>
+              <span>Kuis Evaluasi ({meeting.quiz.length})</span>
             </button>
           </div>
         </div>
 
         {/* Modal Scrollable Body */}
-        <div className="p-5 sm:p-7 overflow-y-auto space-y-6 flex-1 text-slate-800">
+        <div className="p-4 sm:p-7 overflow-y-auto space-y-6 flex-1 text-slate-800 touch-pan-y">
+
           {/* TAB 1: MODUL MATERI LENGKAP (Textbook Style) */}
           {activeTab === 'materi-lengkap' && (
             <div className="space-y-6">
@@ -562,10 +564,10 @@ export const MeetingDetailModal: React.FC<MeetingDetailModalProps> = ({
         </div>
 
         {/* Modal Bottom Actions */}
-        <div className="p-4 sm:p-5 border-t border-slate-200 bg-slate-50 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="p-3.5 sm:p-5 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
           <button
             onClick={() => onToggleComplete(meeting.id)}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg font-semibold transition-colors ${
+            className={`w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-semibold transition-colors min-h-[44px] ${
               isCompleted
                 ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
                 : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
@@ -575,15 +577,16 @@ export const MeetingDetailModal: React.FC<MeetingDetailModalProps> = ({
             <span>{isCompleted ? 'Sudah Dipelajari (Selesai)' : 'Tandai Selesai Dipelajari'}</span>
           </button>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               onClick={onClose}
-              className="px-4 py-2 font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 rounded-lg transition-colors"
+              className="w-full sm:w-auto px-5 py-2.5 font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 rounded-xl transition-colors min-h-[44px] text-center"
             >
               Tutup
             </button>
           </div>
         </div>
+
       </div>
     </div>
   );
